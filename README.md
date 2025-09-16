@@ -40,9 +40,8 @@
 
 Чтобы добавить ссылку в файл Readme.md, нужно использовать синтаксис Markdown. Это делают так:
 
-```markdown
+
 [Диаграмма контекста](https://github.com/antonJagupov/warmhouse/blob/warmhouse/context_diagram.png)
-```
 
 # Задание 2. Проектирование микросервисной архитектуры
 
