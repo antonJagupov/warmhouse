@@ -49,7 +49,7 @@
 
 **Диаграмма контейнеров (Containers)**
 
-Добавьте диаграмму.
+[Диаграмма контейнеров](https://github.com/antonJagupov/warmhouse/blob/warmhouse/container_diagram.png)
 
 **Диаграмма компонентов (Components)**
 
