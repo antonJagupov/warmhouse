@@ -53,7 +53,7 @@
 
 **Диаграмма компонентов (Components)**
 
-[Диаграмма компонент](https://github.com/antonJagupov/warmhouse/blob/warmhouse/conmponent_diagram.png)
+[Диаграмма компонент](https://github.com/antonJagupov/warmhouse/blob/warmhouse/component_diagram.png)
 
 **Диаграмма кода (Code)**
 
