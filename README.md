@@ -53,7 +53,7 @@
 
 **Диаграмма компонентов (Components)**
 
-Добавьте диаграмму для каждого из выделенных микросервисов.
+[Диаграмма компонент](https://github.com/antonJagupov/warmhouse/blob/warmhouse/conmponent_diagram.png)
 
 **Диаграмма кода (Code)**
 
