@@ -57,11 +57,11 @@
 
 **Диаграмма кода (Code)**
 
-Добавьте одну диаграмму или несколько.
+[Диаграмма кода](https://github.com/antonJagupov/warmhouse/blob/warmhouse/code_diagram.png)
 
 # Задание 3. Разработка ER-диаграммы
 
-Добавьте сюда ER-диаграмму. Она должна отражать ключевые сущности системы, их атрибуты и тип связей между ними.
+[Диаграмма ER](https://github.com/antonJagupov/warmhouse/blob/warmhouse/ER_diagram.png)
 
 # Задание 4. Создание и документирование API
 
