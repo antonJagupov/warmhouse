@@ -1,0 +1,879 @@
+openapi: 3.0.4
+info:
+  title: WarmHouse System - OpenAPI 3.0
+  description: |-
+    Сиситема удаленного управления устройствами умного дома. 
+  contact:
+    email: ja.anton.ja@gmail.com
+  version: 1.0.0
+externalDocs:
+  description: Проект на GitHub
+  url: https://github.com/antonJagupov/warmhouse
+servers:
+  - url: https://github.com/antonJagupov/warmhouse/api
+tags:
+  - name: user
+    description: Управление пользователями
+  - name: device
+    description: Управление устройствами, запрос данных с устройств
+  - name: video
+    description: Управление видеокамерами
+  - name: cloud
+    description: Управление записями с видеокамер   
+paths:
+  /user:
+    put:
+      tags:
+        - user
+      summary: Изменение данных пользователя.
+      description: Изменение данных пользователя по Id.
+      operationId: updateUser1
+      requestBody:
+        description: Изменение пользователя
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: User not found
+        '422':
+          description: Validation exception
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    post:
+      tags:
+        - user
+      summary: Добавление нового пользователя
+      description:  Добавление нового пользователя
+      operationId: addUser1
+      requestBody:
+        description: Добавление нового пользователя
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Invalid input
+        '422':
+          description: Validation exception
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /user/findByRole:
+    get:
+      tags:
+        - user
+      summary: Поиск пользователя по роли.
+      description: Multiple status values can be provided with comma separated strings.
+      operationId: findUsersByRole
+      parameters:
+        - name: roleId
+          in: query
+          description: Идентификатор роли
+          required: false
+          explode: true
+          schema:
+            $ref: "#/components/schemas/Role"
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        '400':
+          description: Invalid status value
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+  /user/{userId}:
+    get:
+      tags:
+        - user
+      summary: Поиск пользователя по Id
+      description: Возвращает пользователя
+      operationId: getUserById
+      parameters:
+        - name: userId
+          in: path
+          description: Идентификатор пользователя
+          required: true
+          schema:
+            type: integer
+            format: int8
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: User not found
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    delete:
+      tags:
+        - user
+      summary: Удаление пользователя.
+      description: Удаление пользователя.
+      operationId: Удаление пользователя
+      parameters:
+        - name: api_key
+          in: header
+          description: ''
+          required: false
+          schema:
+            type: string
+        - name: userId
+          in: path
+          description: Идентификатор пользователя
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Пользователь удален
+        '400':
+          description: Invalid user value
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /user/login:
+    get:
+      tags:
+        - user
+      summary: Logs user into the system.
+      description: Log into the system.
+      operationId: loginUser
+      parameters:
+        - name: username
+          in: query
+          description: The user name for login
+          required: false
+          schema:
+            type: string
+        - name: password
+          in: query
+          description: The password for login in clear text
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          headers:
+            X-Rate-Limit:
+              description: calls per hour allowed by the user
+              schema:
+                type: integer
+                format: int32
+            X-Expires-After:
+              description: date in UTC when token expires
+              schema:
+                type: string
+                format: date-time
+          content:
+            application/xml:
+              schema:
+                type: string
+            application/json:
+              schema:
+                type: string
+        '400':
+          description: Invalid username/password supplied
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /user/logout:
+    get:
+      tags:
+        - user
+      summary: Logs out current logged in user session.
+      description: Log user out of the system.
+      operationId: logoutUser
+      parameters: []
+      responses:
+        '200':
+          description: successful operation
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /user/{username}:
+    get:
+      tags:
+        - user
+      summary: Get user by user name.
+      description: Get user detail based on username.
+      operationId: getUserByName
+      parameters:
+        - name: username
+          in: path
+          description: The name that needs to be fetched. Use user1 for testing
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Invalid username supplied
+        '404':
+          description: User not found
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    put:
+      tags:
+        - user
+      summary: Update user resource.
+      description: This can only be done by the logged in user.
+      operationId: updateUser
+      parameters:
+        - name: username
+          in: path
+          description: name that need to be deleted
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Update an existent user in the store
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '200':
+          description: successful operation
+        '400':
+          description: bad request
+        '404':
+          description: user not found
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    delete:
+      tags:
+        - user
+      summary: Delete user resource.
+      description: This can only be done by the logged in user.
+      operationId: deleteUser
+      parameters:
+        - name: username
+          in: path
+          description: The name that needs to be deleted
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: User deleted
+        '400':
+          description: Invalid username supplied
+        '404':
+          description: User not found
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /device:
+    put:
+      tags:
+        - device
+      summary: Изменение данных устройства.
+      description: Изменение данных устройства по Id.
+      operationId: updateDevice
+      requestBody:
+        description: Изменение устройства
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Device'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Device'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Device'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Device'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Device'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: User not found
+        '422':
+          description: Validation exception
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    post:
+      tags:
+        - device
+      summary: Добавление нового устройства
+      description:  Добавление нового устройства
+      operationId: addDevice
+      requestBody:
+        description: Добавление нового устройства
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Device'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Device'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Device'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Device'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Device'
+        '400':
+          description: Invalid input
+        '422':
+          description: Validation exception
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /device/{deviceId}:
+    get:
+      tags:
+        - device
+      summary: Поиск устройства по Id
+      description: Возвращает устройство
+      operationId: getDeviceById
+      parameters:
+        - name: deviceId
+          in: path
+          description: Идентификатор устройства
+          required: true
+          schema:
+            type: integer
+            format: int8
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Device'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Device'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: User not found
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    put:
+      tags:
+        - device
+      summary: изменение состояния устройства - запрос на выполнение действия
+      description: This can only be done by the logged in user.
+      operationId: changeDeviceState
+      parameters:
+        - name: deviceId
+          in: path
+          description: Идентификатор устройства
+          required: true
+          schema:
+            type: integer
+            format: int8
+      requestBody:
+        description: Update an existent user in the store
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Device'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Device'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Device'
+      responses:
+        '200':
+          description: successful operation
+        '400':
+          description: bad request
+        '404':
+          description: user not found
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"                
+    delete:
+      tags:
+        - device
+      summary: Удаление устройства.
+      description: Удаление устройства.
+      operationId: Удаление устройства
+      parameters:
+        - name: api_key
+          in: header
+          description: ''
+          required: false
+          schema:
+            type: string
+        - name: deviceId
+          in: path
+          description: Идентификатор устройства
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Устройство удалено
+        '400':
+          description: Invalid user value
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /video/{deviceId}:
+    get:
+      tags:
+        - video
+      summary: Поиск устройства по Id
+      description: Возвращает видеопоток с камеры
+      operationId: getVideoById
+      parameters:
+        - name: deviceId
+          in: path
+          description: Идентификатор устройства-камеры
+          required: true
+          schema:
+            type: integer
+            format: int8
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VideoFile'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/VideoFile'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: User not found
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /cloud:
+    post:
+      tags:
+        - cloud
+      summary: Добавление новой записи с камеры
+      description:  Добавление новой записи с камеры
+      operationId: addVideoFile
+      requestBody:
+        description: Добавление новой записи с камеры
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VideoFile'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/VideoFile'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/VideoFile'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VideoFile'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/VideoFile'
+        '400':
+          description: Invalid input
+        '422':
+          description: Validation exception
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /cloud/{videoFileId}:
+    get:
+      tags:
+        - cloud
+      summary: Запрос на чтение видеозаписи
+      description: Возвращает видеозапись
+      operationId: getVideoFileById
+      parameters:
+        - name: videoFileId
+          in: path
+          description: Идентификатор устройства
+          required: true
+          schema:
+            type: integer
+            format: int8
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VideoFile'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/VideoFile'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: User not found
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    delete:
+      tags:
+        - device
+      summary: Удаление видеофайла.
+      description: Удаление видеофайла.
+      operationId: Удаление видеофайла
+      parameters:
+        - name: api_key
+          in: header
+          description: ''
+          required: false
+          schema:
+            type: string
+        - name: videoFileId
+          in: path
+          description: Идентификатор видеофайла
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: видеофайл удален
+        '400':
+          description: Invalid user value
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+components:
+  schemas:
+    DeviceType:
+      type: object
+      properties:
+        id: 
+          type: integer
+          format: int8
+          example: 11
+        code: 
+          type: string
+          example: 'РП'
+        name:
+          type: string
+          example: 'Робот-пылесос'
+      xml:
+        name: deviceType
+    Command:
+      type: object
+      properties:
+        id: 
+          type: integer
+          format: int8
+          example: 11
+        code: 
+          type: string
+          example: 'Вкл'
+        name:
+          type: string
+          example: 'Включить'
+      xml:
+        name: command
+    DeviceCommandState: 
+      type: object
+      properties:
+        statate:
+          type: integer
+          format: int8
+          example: 0
+        command:
+          $ref: '#/components/schemas/Command'  
+      xml:
+        name: deviceCommandState    
+    Device:
+      type: object
+      properties:
+        id: 
+          type: integer
+          format: int8
+          example: 11
+        deviceType:
+          $ref: '#/components/schemas/DeviceType'
+        name:
+          type: string
+          example: 'Кондиционер в спальне'
+        internalIp: 
+          type: string
+          example: '10.198.05.16'
+        internalUuid: 
+          type: string
+          example: '22c9122a-9214-46e5-b485-93bbba9bfe24'
+        state:
+          type: array
+          items: 
+            $ref: '#/components/schemas/DeviceCommandState'
+      xml:
+        name: device
+    Role: 
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int8
+          example: 11
+        name: 
+          type: string
+          example: 'Администратор'
+        code:   
+          type: string
+          example: 'Admin'
+      xml:
+        name: role
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int8
+          example: 10
+        login:
+          type: string
+          example: 'petrov1978'
+        firstName:
+          type: string
+          example: 'Петр'
+        lastName:
+          type: string
+          example: 'Петров'
+        email:
+          type: string
+          example: john@email.com
+        hashPassword:
+          type: string
+          example: '345ERDGFGH456546&^%^4432K&&4'
+        phone:
+          type: string
+          format: '+# (###) ###-##-##'
+          example: '+7 (123) 456-78-999'
+        userRole:
+          $ref: '#/components/schemas/Role'  
+        userStatus:  
+          type: integer
+          description: 'Статус пользователя 1 - активен, 0 - неактивен'
+          format: int8
+          example: 1
+      xml:
+        name: user      
+    VideoFile:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 10
+        name:
+          type: string
+          example: 'BackyardLeftCorner2025-05-18-12-34-15.mkv'
+        size:
+          type: integer
+          format: int32
+          example: 71513242
+        shipDate:
+          type: string
+          format: date-time
+        status:
+          type: string
+          description: Order Status
+          example: approved
+          enum:
+            - placed
+            - approved
+            - delivered
+        complete:
+          type: boolean
+      xml:
+        name: order
+    ApiResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        type:
+          type: string
+        message:
+          type: string
+      xml:
+        name: '##default'
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+      required:
+        - code
+        - message
+  requestBodies:
+    Device:
+      description: Устройство, которое надо добавить или отредактировать
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Device'
+    User:
+      description: пользователь для редактирования/добавления
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/User'    
