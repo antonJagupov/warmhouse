@@ -23,5 +23,6 @@ COPY --from=builder /app/target/*.jar app.jar
 # Указываем порт (должен совпадать с server.port в application.properties)
 EXPOSE 8081
 
+
 # Запуск приложения
 ENTRYPOINT ["java", "-jar", "app.jar"]
