@@ -4,8 +4,14 @@ services:
   postgres:
     image: postgres:16-alpine
     container_name: smarthome-postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: postgres
     volumes:
-      - ./smart_home/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./smart_home/init.sql:/docker-entrypoint-initdb.d/init.sql      
+    networks:
+      - smarthome-network
 
   temperature-api:
     build:
