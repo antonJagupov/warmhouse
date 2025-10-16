@@ -6,10 +6,16 @@ services:
     container_name: smarthome-postgres
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
+      POSTGRES_PASSWORD: postgres
       POSTGRES_DB: postgres
     volumes:
-      - ./smart_home/init.sql:/docker-entrypoint-initdb.d/init.sql      
+      - ./smart_home/init.sql:/docker-entrypoint-initdb.d/init.sql    
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d smarthome"]
+      interval: 10s    # проверять каждые 10 секунд
+      timeout: 5s      # ждать ответа максимум 5 секунд
+      retries: 5       # попытаться 5 раз перед тем, как признать контейнер "unhealthy"
+      start_period: 10s # дать Postgres время на старт перед первой проверкой           
     networks:
       - smarthome-network
 
