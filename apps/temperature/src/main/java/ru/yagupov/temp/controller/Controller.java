@@ -10,13 +10,13 @@ import java.util.List;
 public class Controller {
 
     @GetMapping("/temperature")
-    public String temperature(@RequestParam(required = false, name = "location") String location) {
-        return String.valueOf(Math.round(Math.random()*100));
+    public double temperature(@RequestParam(required = false, name = "location") String location) {
+        return (double) Math.round(Math.random() * 10000) / 100;
     }
     
     @GetMapping("/temperature/{sensorId}")
-    public String temperatureById(@PathVariable(required = false, name = "sensorId") String sensorId) {
-        return String.valueOf(Math.round(Math.random()*100));
+    public double temperatureById(@PathVariable(required = false, name = "sensorId") String sensorId) {
+        return (double) Math.round(Math.random() * 10000) / 100;
     }
     
     @GetMapping("/health")
@@ -64,3 +64,4 @@ public class Controller {
     }
 
 }
+
