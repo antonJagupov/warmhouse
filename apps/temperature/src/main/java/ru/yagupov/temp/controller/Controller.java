@@ -10,11 +10,15 @@ import java.util.List;
 public class Controller {
 
     @GetMapping("/temperature")
-    public String temperature(@RequestParam(required = false, name = "location") String location,
-                              @RequestParam(required = false, name = "sensorId") String sensorId) {
+    public String temperature(@RequestParam(required = false, name = "location") String location) {
         return String.valueOf(Math.round(Math.random()*100));
     }
-
+    
+    @GetMapping("/temperature/{sensorId}")
+    public String temperatureById(@PathVariable(required = false, name = "sensorId") String sensorId) {
+        return String.valueOf(Math.round(Math.random()*100));
+    }
+    
     @GetMapping("/health")
     public String health() {
         return "OK";
@@ -58,4 +62,5 @@ public class Controller {
     public void delete(@PathVariable Long id) {
         service.delete(id);
     }
+
 }
