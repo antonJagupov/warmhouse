@@ -23,7 +23,7 @@ services:
     build:
       context: ./temperature
       dockerfile: Dockerfile
-    container_name: temperature-app
+    container_name: temperature-api
     depends_on:
       postgres:
         condition: service_healthy
