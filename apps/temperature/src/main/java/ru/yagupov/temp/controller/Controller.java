@@ -1,6 +1,7 @@
 package ru.yagupov.temp.controller;
 
 import ru.yagupov.temp.entity.Sensor;
+import ru.yagupov.temp.entity.Temp;
 import ru.yagupov.temp.service.SensorService;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,15 +11,15 @@ import java.util.List;
 public class Controller {
 
     @GetMapping("/temperature")
-    public double temperature(@RequestParam(required = false, name = "location") String location) {
-        return (double) Math.round(Math.random() * 10000) / 100;
+    public Temp temperature(@RequestParam(required = false, name = "location") String location) {
+        return new Temp((double) Math.round(Math.random() * 10000) / 100);
     }
-    
+
     @GetMapping("/temperature/{sensorId}")
-    public double temperatureById(@PathVariable(required = false, name = "sensorId") String sensorId) {
-        return (double) Math.round(Math.random() * 10000) / 100;
+    public Temp temperatureById(@PathVariable(required = false, name = "sensorId") String sensorId) {
+        return new Temp((double) Math.round(Math.random() * 10000) / 100);
     }
-    
+
     @GetMapping("/health")
     public String health() {
         return "OK";
@@ -62,6 +63,4 @@ public class Controller {
     public void delete(@PathVariable Long id) {
         service.delete(id);
     }
-
 }
-
